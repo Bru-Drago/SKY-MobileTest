@@ -26,13 +26,14 @@ class FilmeInfoViewController: UIViewController {
 
         tituloFilmeLabel.text = filme?.title
         resumoTextView.text = filme?.overview
-        anoLancamentoLabel.text = filme?.release_year
+       // anoLancamentoLabel.text = filme?.release_year
+        anoLancamentoLabel.text = filme?.releaseYear
         tempoDuracaoLabel.text = filme?.duration
         
         //Fazendo o download e setUp da imagem
         capaImageView.layer.cornerRadius = 10
         capaImageView.clipsToBounds = true
-        let img = (filme?.cover_url)!
+        let img = (filme?.coverUrl)!
         print(img)
         capaImageView.downloaded(from: img)
         

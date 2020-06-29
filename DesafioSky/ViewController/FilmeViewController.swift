@@ -26,18 +26,17 @@ class FilmeViewController: UIViewController {
     }
     func getData(){
         //Fazendo o PARSE dos dados da API
+       
         let urlJsonString = "https://sky-exercise.herokuapp.com/api/Movies"
         
-        let url = URL(string: urlJsonString)
-        
-        guard url != nil else {
-            DispatchQueue.main.async {
+        guard let url = URL(string: urlJsonString) else{
+           DispatchQueue.main.async {
                 self.showAlert()
             }
-            print("Erro na URL")
             return
         }
-        URLSession.shared.dataTask(with: url!) { (data, response, error) in
+        
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
                 DispatchQueue.main.async {
                     self.showAlert()
@@ -47,7 +46,10 @@ class FilmeViewController: UIViewController {
             }
             
             do{
-                self.filmes =  try JSONDecoder().decode([Filme].self, from: data)
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                self.filmes =  try decoder.decode([Filme].self, from: data)
+                
                 print(self.filmes)
                 
             }catch let jsonErr{
@@ -101,7 +103,7 @@ extension FilmeViewController:UICollectionViewDelegate, UICollectionViewDataSour
         //Fazendo o download e setUp da imagem
         cell.capaImageView.layer.cornerRadius = 10
         cell.capaImageView.clipsToBounds = true
-        let urlImg = filmes[indexPath.row].cover_url
+        let urlImg = filmes[indexPath.row].coverUrl
         print(urlImg)
         cell.capaImageView.downloaded(from: urlImg)
         
