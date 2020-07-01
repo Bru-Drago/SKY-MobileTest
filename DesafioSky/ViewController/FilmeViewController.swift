@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import Kingfisher
 
 class FilmeViewController: UIViewController {
     
     @IBOutlet weak var filmeCollectionView: UICollectionView!
     
     var filmes = [Filme]()
+    let placeHolderImg = UIImage(named: "cineSky.jpg")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,7 +107,8 @@ extension FilmeViewController:UICollectionViewDelegate, UICollectionViewDataSour
         cell.capaImageView.clipsToBounds = true
         let urlImg = filmes[indexPath.row].coverUrl
         print(urlImg)
-        cell.capaImageView.downloaded(from: urlImg)
+        let urlDownload = URL(string: urlImg)
+        cell.capaImageView.kf.setImage(with: urlDownload, placeholder: placeHolderImg, options: [.transition(.fade(0.9))], progressBlock: nil)
         
         return cell
     }
@@ -121,24 +124,4 @@ extension FilmeViewController:UICollectionViewDelegate, UICollectionViewDataSour
     }
     
 }
-//MARK:-Extension para tratar o download da imagem
-extension UIImageView {
-    func downloaded(from url: URL, contentMode mode: UIView.ContentMode = .scaleAspectFit) {  // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
-        contentMode = mode
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            guard
-                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
-                let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
-                let data = data, error == nil,
-                let image = UIImage(data: data)
-                else { return }
-            DispatchQueue.main.async() { [weak self] in
-                self?.image = image
-            }
-        }.resume()
-    }
-    func downloaded(from link: String, contentMode mode: UIView.ContentMode = .scaleAspectFit) {  // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
-        guard let url = URL(string: link) else { return }
-        downloaded(from: url, contentMode: mode)
-    }
-}
+

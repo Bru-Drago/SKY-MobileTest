@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class FilmeInfoViewController: UIViewController {
     
@@ -20,6 +21,8 @@ class FilmeInfoViewController: UIViewController {
     
     
     var filme : Filme?
+    let placeHolderImg = UIImage(named: "cineSky.jpg")
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +38,9 @@ class FilmeInfoViewController: UIViewController {
         capaImageView.clipsToBounds = true
         let img = (filme?.coverUrl)!
         print(img)
-        capaImageView.downloaded(from: img)
+        let urlImg = URL(string: img)
+        //kingfisher
+        capaImageView.kf.setImage(with: urlImg, placeholder: placeHolderImg)
         
         
     }
